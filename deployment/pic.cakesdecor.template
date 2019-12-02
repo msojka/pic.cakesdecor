@@ -66,8 +66,8 @@
         },
         "SourceCode": { 
             "General": { 
-                "S3Bucket": "%%BUCKET_NAME%%", 
-                "KeyPrefix": "serverless-image-handler/%%VERSION%%" 
+                "S3Bucket": "pic.cakesdecor.src", 
+                "KeyPrefix": "" 
             } 
         } 
     }, 
@@ -218,7 +218,7 @@
                 "Role": { "Fn::GetAtt": [ "ImageHandlerFunctionRole", "Arn" ] }, 
                 "Code": { 
                     "S3Bucket" : { "Fn::Join": [ "-", [{ "Fn::FindInMap": [ "SourceCode", "General", "S3Bucket" ]}, { "Ref": "AWS::Region" }]]}, 
-                    "S3Key" : "serverless-image-handler/%%VERSION%%/image-handler.zip" 
+                    "S3Key" : "image-handler.zip" 
                 }, 
                 "Runtime": "nodejs8.10", 
                 "MemorySize": 1024,
@@ -493,7 +493,7 @@
             "Properties": { 
                 "Code": { 
                     "S3Bucket": { "Fn::Join": [ "-", [{ "Fn::FindInMap": [ "SourceCode", "General", "S3Bucket" ]}, { "Ref": "AWS::Region" }]]}, 
-                    "S3Key": "serverless-image-handler/%%VERSION%%/custom-resource.zip" 
+                    "S3Key": "custom-resource.zip" 
                 }, 
                 "Timeout": 30, 
                 "Runtime": "nodejs8.10", 
@@ -587,7 +587,7 @@
                 "sourceS3Bucket": { "Fn::Join": [ "-", [{ "Fn::FindInMap": [ "SourceCode", "General", "S3Bucket" ]}, { "Ref": "AWS::Region" }]]}, 
                 "sourceS3key": { "Fn::Join": ["/", [{ "Fn::FindInMap": [ "SourceCode", "General", "KeyPrefix" ]}, "demo-ui" ]]}, 
                 "destS3Bucket": { "Ref" : "DemoBucket" }, 
-                "version": "%%VERSION%%", 
+                "version": "1.0.0", 
                 "customAction": "copyS3assets" 
             },
             "DependsOn": [ "CustomResourcePolicy", "CustomResourceRole" ]
