@@ -159,7 +159,7 @@ class ImageRequest {
     parseRequestType(event) {
         const path = event["path"];
         // ----
-        const matchDefault = new RegExp(/^(\/?)([0-9a-zA-Z+\/]{4})*(([0-9a-zA-Z+\/]{2}==)|([0-9a-zA-Z+\/]{3}=))?.jpg$/);
+        const matchDefault = new RegExp(/^(\/?)([0-9a-zA-Z+\/]{4})*(([0-9a-zA-Z+\/]{2}==)|([0-9a-zA-Z+\/]{3}=))?\.jpg$/);
         const matchThumbor = new RegExp(/^(\/?)((fit-in)?|(filters:.+\(.?\))?|(unsafe)?).*(.+jpg|.+png|.+webp|.+tiff|.+jpeg)$/);
         const matchCustom = new RegExp(/(\/?)(.*)(jpg|png|webp|tiff|jpeg)/);
         const definedEnvironmentVariables = (
@@ -192,9 +192,9 @@ class ImageRequest {
     decodeRequest(event) {
         const path = event["path"];
         if (path !== undefined) {
-            const splitPath = path.split("/");
-            const splitPathWithoutJPG = splitPath.slice(0, -4)
-            const encoded = splitPathWithoutJPG[splitPathWithoutJPG.length - 1];
+            const pathWithoutJPG = path.slice(0, -4);
+            const splitPath = pathWithoutJPG.split("/");
+            const encoded = splitPath[splitPath.length - 1];
             const toBuffer = new Buffer(encoded, 'base64');
             try {
                 return JSON.parse(toBuffer.toString('ascii'));
