@@ -1,58 +1,39 @@
-**_Important Notice:_**
-Due to a [change in the AWS Lambda execution environment](https://aws.amazon.com/blogs/compute/upcoming-updates-to-the-aws-lambda-execution-environment/), Serverless Image Handler v3 deployments are functionally broken. To address the issue we have released [minor version update v3.1.1](https://solutions-reference.s3.amazonaws.com/serverless-image-handler/v3.1.1/serverless-image-handler.template). We recommend all users of v3 to run cloudformation stack update with v3.1.1. Additionally, we suggest you to look at v4 of the solution and migrate to v4 if it addresses all of your use cases. 
-
-# AWS Serverless Image Handler Lambda wrapper for SharpJS
-A solution to dynamically handle images on the fly, utilizing Sharp (https://sharp.pixelplumbing.com/en/stable/).
-Published version, additional details and documentation are available here: https://aws.amazon.com/solutions/serverless-image-handler/
-
-_Note:_ it is recommend to build the application binary on Amazon Linux.
-
-## Running unit tests for customization
-* Clone the repository, then make the desired code changes
-* Next, run unit tests to make sure added customization passes the tests
-```
-cd ./deployment
-chmod +x ./run-unit-tests.sh  \n
-./run-unit-tests.sh \n
-```
-
 ## Building distributable for customization
-* Configure the bucket name of your target Amazon S3 distribution bucket
-```
-export TEMPLATE_OUTPUT_BUCKET=my-bucket-name # bucket where cfn template will reside
-export DIST_OUTPUT_BUCKET=my-bucket-name # bucket where customized code will reside
-export VERSION=my-version # version number for the customized code
-```
-_Note:_ You would have to create 2 buckets, one named 'my-bucket-name' and another regional bucket named 'my-bucket-name-<aws_region>'; aws_region is where you are testing the customized solution. Also, the assets  in bucket should be publicly accessible.
 
-```
-* Clone the github repo
-```bash
-git clone https://github.com/awslabs/serverless-image-handler.git
-```
+* Create `pic.cakesdecor.src-us-east-1` bucket.
+* Rename `pic.cakesdecor.template` and search&replace all `pic.cakesdecor` in it.
+* Build on micro EC2 instance (Amazon Linux AMI & install `nvm` and `node 8.10`).
+* Zip all files from cloned repo.
+* Ex. `scp -i ~/.ssh/amazonlinuxer.pem src.zip ec2-user@ec2-54-152-128-215.compute-1.amazonaws.com:src.zip`
+* Ex. `ssh -i ~/.ssh/amazonlinuxer.pem ec2-user@ec2-54-152-128-215.compute-1.amazonaws.com`
 
-* Navigate to the deployment folder
-```bash
-cd serverless-image-handler/deployment
-```
+# a) Build
+
+* Unzip and cd to `deployment`
 
 * Now build the distributable
 ```bash
-sudo ./build-s3-dist.sh $DIST_OUTPUT_BUCKET $VERSION
+sudo ./build-s3-dist.sh
 ```
 
 * Deploy the distributable to an Amazon S3 bucket in your account. Note: you must have the AWS Command Line Interface installed.
 ```bash
-aws s3 cp ./dist/ s3://$DIST_OUTPUT_BUCKET-[region_name]/serverless-image-handler/$VERSION/ --recursive --exclude "*" --include "*.zip"
-aws s3 cp ./dist/serverless-image-handler.template s3://$TEMPLATE_OUTPUT_BUCKET/serverless-image-handler/$VERSION/
+aws s3 cp ./dist/ s3://pic.cakesdecor.src-us-east-1/ --recursive --exclude "*" --include "*.zip"
+aws s3 cp ./dist/pic.cakesdecor.template s3://pic.cakesdecor.src-us-east-1/
 ```
-_Note:_ In the above example, the solution template will expect the source code to be located in the my-bucket-name-[region_name] with prefix serverless-image-handler/my-version/serverless-image-handler.zip
-
-* Get the link of the serverless-image-handler.template uploaded to your Amazon S3 bucket.
-* Deploy the Serverless Image Handler solution to your account by launching a new AWS CloudFormation stack using the link of the serverless-image-handler.template
+* Get the link of the pic.cakesdecor.template uploaded to your Amazon S3 bucket.
+* Deploy the Serverless Image Handler solution to your account by launching a new AWS CloudFormation stack using the link of the pic.cakesdecor.template
 ```bash
-https://s3.amazonaws.com/my-bucket-name/serverless-image-handler/my-version/serverless-image-handler.template
+https://s3.amazonaws.com/pic.cakesdecor.src-us-east-1/pic.cakesdecor.template
 ```
+
+# b) Build & update just image handler lambda
+
+* Unzip and cd to `source/image-handler`
+* `npm install`
+* `npm run build`
+* `cd dist/`
+* Ex. `aws lambda update-function-code --function-name PicCakesdecor-ImageHandlerFunction-1I251OAM5WPBG --zip-file fileb://image-handler.zip`
 
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
