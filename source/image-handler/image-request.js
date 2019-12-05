@@ -11,8 +11,6 @@
  *  and limitations under the License.                                                                                *
  *********************************************************************************************************************/
 
-const ThumborMapping = require('./thumbor-mapping');
-
 class ImageRequest {
 
     /**
@@ -28,15 +26,15 @@ class ImageRequest {
                 throw {
                     status: 400,
                     code: 'RequestTypeError',
-                    message: 'The path is not in correct format.'
+                    message: 'Unrecognized path format.'
                 };
             }
             
             this.bucket = this.getAllowedSourceBuckets()[0];
             
             const pathSegments = path.split("/");
-            this.transform = pathSegments[0];
-            this.key = pathSegments[1];            
+            this.transform = pathSegments[1];
+            this.key = pathSegments[2];        
             
             this.originalImage = await this.getOriginalImage(this.bucket, this.key)
             return Promise.resolve(this);
