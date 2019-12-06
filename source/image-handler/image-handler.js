@@ -22,22 +22,12 @@ class ImageHandler {
      */  
     async process(request) {  
         const originalImage = request.originalImage; 
-        switch(request.version) {
-            case 1:
-                if (request.transform === "o") { 
-                    return originalImage.toString('base64'); 
-                } else { 
-                    const modifiedImage = await this.applyTransform(originalImage, request.transform, request.bucket); 
-                    const bufferImage = await modifiedImage.toBuffer();  
-                    return bufferImage.toString('base64'); 
-                }
-                break;
-            default:
-                throw {
-                    status: 400,
-                    code: 'RequestTypeError',
-                    message: 'Unrecognized version.'
-                };
+        if (request.transform === "o") { 
+            return originalImage.toString('base64'); 
+        } else { 
+            const modifiedImage = await this.applyTransform(originalImage, request.transform, request.bucket); 
+            const bufferImage = await modifiedImage.toBuffer();  
+            return bufferImage.toString('base64'); 
         }
     }
     

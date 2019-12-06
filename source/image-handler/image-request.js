@@ -21,7 +21,7 @@ class ImageRequest {
     async setup(event) {
         try {
             const path = event["path"];
-            const expectedPath = new RegExp(/^\/\d+\/\w+\/[^.^\/]+.jpg$/);
+            const expectedPath = new RegExp(/^\/\w+\/[^.^\/]+.jpg$/);
             if (!expectedPath.test(path)) {  // use sharp
                 throw {
                     status: 400,
@@ -32,11 +32,10 @@ class ImageRequest {
             
             this.bucket = this.getAllowedSourceBuckets()[0];
             
-            // Ex. /1/dt3/safdsafdsfdcadasd.jpg
+            // Ex. /dt3/safdsafdsfdcadasd.jpg
             const pathSegments = path.split("/");
-            this.version = parseInt(pathSegments[1]);
-            this.transform = pathSegments[2];
-            this.key = pathSegments[3];        
+            this.transform = pathSegments[1];
+            this.key = pathSegments[2];
             
             this.originalImage = await this.getOriginalImage(this.bucket, this.key)
             return Promise.resolve(this);
