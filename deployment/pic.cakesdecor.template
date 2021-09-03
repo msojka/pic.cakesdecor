@@ -220,7 +220,7 @@
                     "S3Bucket" : { "Fn::Join": [ "-", [{ "Fn::FindInMap": [ "SourceCode", "General", "S3Bucket" ]}, { "Ref": "AWS::Region" }]]}, 
                     "S3Key" : "image-handler.zip" 
                 }, 
-                "Runtime": "nodejs12.x", 
+                "Runtime": "nodejs10.x", 
                 "MemorySize": 1024,
                 "Timeout": 30,
                 "Environment" : { 
@@ -496,7 +496,7 @@
                     "S3Key": "custom-resource.zip" 
                 }, 
                 "Timeout": 30, 
-                "Runtime": "nodejs12.x", 
+                "Runtime": "nodejs10.x", 
                 "Role": { "Fn::GetAtt": [ "CustomResourceRole", "Arn" ] }, 
                 "Handler": "index.handler"
             } 

@@ -50,6 +50,18 @@ class ImageHandler {
             case "m":
                 image.resize({width: 640, fit: "inside"}).sharpen().jpeg({quality: 75});
                 break;
+            // cake 360 wide
+            case "c400":
+                image.resize({width: 400, fit: "inside"}).sharpen().jpeg({quality: 75});
+                break;
+            // cake 720 wide
+            case "c700":
+                image.resize({width: 700, fit: "inside"}).sharpen().jpeg({quality: 75});
+                break;
+            case "ig":
+                // 4x5 format
+                image.resize({width: 800, height: 1000, fit: "cover"}).sharpen().jpeg({quality: 95});
+                break;
             case "l":
                 image.resize({width: 1024, height: 1024, fit: "inside"}).sharpen().jpeg({quality: 75});
                 break;
